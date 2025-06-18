@@ -12,11 +12,20 @@ def hello():
 # gets a single recipe from the mealdb API
 @app.route("/get-recipe", methods=["GET"])
 def get_recipe():
-    # Make API request to TheMealDB
-    response = requests.get("https://www.themealdb.com/api/json/v1/1/random.php")
+    headers = {
+        "Access-Control-Allow-Origin": "*"
+    }
 
-    # Return JSON with headers
-    return jsonify(response.json()), 200, headers
+    try:
+        response = requests.get("https://www.themealdb.com/api/json/v1/1/random.php", timeout=5)
+        response.raise_for_status()  # Handle 4xx and 5xx
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": "Request to TheMealDB failed", "details": str(e)}), 502, headers
+    except ValueError:
+        return jsonify({"error": "Invalid JSON returned from TheMealDB"}), 502, headers
+
+    return jsonify(data), 200, headers
 
 if __name__ == "__main__":
     app.run(debug=True)
