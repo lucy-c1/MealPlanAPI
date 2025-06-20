@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
+import time
 
 app = Flask(__name__)
 CORS(app)  # Allow frontend requests
@@ -24,6 +25,8 @@ def get_recipe():
         return jsonify({"error": "Request to TheMealDB failed", "details": str(e)}), 502, headers
     except ValueError:
         return jsonify({"error": "Invalid JSON returned from TheMealDB"}), 502, headers
+    
+    time.sleep(0.1)
 
     return jsonify(data), 200, headers
 
