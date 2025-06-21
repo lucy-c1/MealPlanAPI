@@ -30,5 +30,20 @@ def get_recipe():
 
     return jsonify(data), 200, headers
 
+@app.route('/api/search', methods=['GET'])
+def search_recipe():
+    headers = {
+        "Access-Control-Allow-Origin": "*"
+    }
+    
+    query = request.args.get('q', '')
+    if not query:
+        return jsonify({'error': 'No query provided'}), 400
+
+    response = requests.get(f'https://www.themealdb.com/api/json/v1/1/search.php?s={query}')
+    data = response.json()
+
+    return jsonify(data), 200, headers
+
 if __name__ == "__main__":
     app.run(debug=True)
