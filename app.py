@@ -144,4 +144,4 @@ def search_area_details():
     return jsonify({'meals': detailed_meals}), 200, headers
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
